@@ -263,17 +263,17 @@
                 'Selesai': 'bg-slate-200 text-slate-800'
             };
             const actions = {
-                'Diterima': <button onclick="updateOrderStatus(${order.id}, 'Sedang Disiapkan')" class="bg-amber-500 text-white px-3 py-1 rounded-md text-sm hover:bg-amber-600 transition">Siapkan</button>,
-                'Sedang Disiapkan': <button onclick="updateOrderStatus(${order.id}, 'Siap Diambil')" class="bg-emerald-500 text-white px-3 py-1 rounded-md text-sm hover:bg-emerald-600 transition">Siap Diambil</button>,
-                'Siap Diambil': <button onclick="updateOrderStatus(${order.id}, 'Selesai')" class="bg-slate-500 text-white px-3 py-1 rounded-md text-sm hover:bg-slate-600 transition">Selesaikan</button>,
-                'Selesai': <span class="text-sm text-gray-500">Selesai</span>
+                'Diterima': `<button onclick="updateOrderStatus(${order.id}, 'Sedang Disiapkan')" class="bg-amber-500 text-white px-3 py-1 rounded-md text-sm hover:bg-amber-600 transition">Siapkan</button>`,
+                'Sedang Disiapkan': `<button onclick="updateOrderStatus(${order.id}, 'Siap Diambil')" class="bg-emerald-500 text-white px-3 py-1 rounded-md text-sm hover:bg-emerald-600 transition">Siap Diambil</button>`,
+                'Siap Diambil': `<button onclick="updateOrderStatus(${order.id}, 'Selesai')" class="bg-slate-500 text-white px-3 py-1 rounded-md text-sm hover:bg-slate-600 transition">Selesaikan</button>`,
+                'Selesai': `<span class="text-sm text-gray-500">Selesai</span>`
             };
             return `
                 <div class="border rounded-lg p-4 flex flex-col md:flex-row justify-between items-start md:items-center animate-fade-in-up">
                     <div>
                         <p class="font-bold text-lg">Pesanan #${order.id} <span class="text-sm font-normal text-gray-500">- Siswa: ${order.nis}</span></p>
                         <ul class="list-disc list-inside text-gray-600">
-                            ${order.items.map(item => <li>${item.qty}x ${item.name}</li>).join('')}
+                            ${order.items.map(item => `<li>${item.qty}x ${item.name}</li>`).join('')}
                         </ul>
                         <p class="font-semibold mt-2">Total: Rp ${order.total.toLocaleString('id-ID')}</p>
                     </div>
@@ -397,13 +397,14 @@
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                     ${menuItems.map(item => {
                         const disabled = !item.available ? 'opacity-50 cursor-not-allowed' : '';
+                        const clickHandler = item.available ? `onclick="addToCart(${item.id})"` : '';
                         return `
                             <div class="card overflow-hidden animate-fade-in-up ${disabled}">
                                 <img src="${item.image}" alt="${item.name}" class="w-full h-32 object-cover">
                                 <div class="p-3">
                                     <h3 class="font-bold text-md truncate">${item.name}</h3>
                                     <p class="text-sm text-gray-600">Rp ${item.price.toLocaleString('id-ID')}</p>
-                                    <button onclick="${item.available ? addToCart(${item.id}) : ''}" class="mt-2 w-full text-sm font-semibold py-2 rounded-md transition ${item.available ? 'btn-primary' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}">
+                                    <button ${clickHandler} class="mt-2 w-full text-sm font-semibold py-2 rounded-md transition ${item.available ? 'btn-primary' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}">
                                         ${item.available ? 'Tambah' : 'Habis'}
                                     </button>
                                 </div>
@@ -487,7 +488,7 @@
                                 <span class="text-sm font-semibold px-3 py-1 rounded-full ${statusColors[order.status]}">${order.status}</span>
                             </div>
                             <div class="mt-2">
-                                ${order.items.map(i => <p class="text-gray-700">${i.qty}x ${i.name}</p>).join('')}
+                                ${order.items.map(i => `<p class="text-gray-700">${i.qty}x ${i.name}</p>`).join('')}
                             </div>
                             <p class="font-semibold text-right mt-2">Total: Rp ${order.total.toLocaleString('id-ID')}</p>
                         </div>
@@ -501,7 +502,7 @@
             const inactiveClass = 'text-gray-400';
             const baseButtonClass = 'flex flex-col items-center justify-center pt-2 pb-1 w-full transition-all duration-300 transform hover:scale-110';
             
-            const getButtonClass = (page) => ${baseButtonClass} ${state.currentPage === page ? activeClass : inactiveClass};
+            const getButtonClass = (page) => `${baseButtonClass} ${state.currentPage === page ? activeClass : inactiveClass}`;
 
             return `
                 <nav class="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-lg border-t border-slate-200 flex justify-around h-16">
@@ -513,7 +514,7 @@
                     <button onclick="navigateTo('siswaCart')" class="${getButtonClass('siswaCart')} relative">
                         <i data-lucide="shopping-cart" class="w-6 h-6"></i>
                         <span class="text-xs mt-1">Keranjang</span>
-                        ${state.cart.length > 0 ? <span class="absolute top-0 right-8 bg-red-500 text-white text-[10px] rounded-full w-5 h-5 flex items-center justify-center border-2 border-white">${state.cart.reduce((sum, i) => sum + i.qty, 0)}</span> : ''}
+                        ${state.cart.length > 0 ? `<span class="absolute top-0 right-8 bg-red-500 text-white text-[10px] rounded-full w-5 h-5 flex items-center justify-center border-2 border-white">${state.cart.reduce((sum, i) => sum + i.qty, 0)}</span>` : ''}
                         ${state.currentPage === 'siswaCart' ? '<div class="w-8 h-1 bg-emerald-600 rounded-full mt-1 animate-fade-in-up"></div>' : '<div class="w-8 h-1 bg-transparent mt-1"></div>'}
                     </button>
                     <button onclick="navigateTo('siswaOrders')" class="${getButtonClass('siswaOrders')}">
@@ -617,7 +618,7 @@
                 name: form.name.value,
                 price: parseInt(form.price.value, 10),
                 description: form.description.value,
-                image: form.image.value || https://placehold.co/600x400/cccccc/ffffff?text=${form.name.value.replace(/\s/g, '+')},
+                image: form.image.value || `https://placehold.co/600x400/cccccc/ffffff?text=${form.name.value.replace(/\s/g, '+')}`,
             };
 
             if (state.editingMenuItem) {
@@ -685,7 +686,7 @@
                             </div>
                             <div class="mt-6 flex justify-between items-center">
                                 <div>
-                                    ${isEditing ? <button type="button" onclick="handleDeleteMenu(${item.id})" class="bg-red-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-red-600 flex items-center gap-2"><i data-lucide="trash-2" class="w-4 h-4"></i> Hapus</button> : ''}
+                                    ${isEditing ? `<button type="button" onclick="handleDeleteMenu(${item.id})" class="bg-red-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-red-600 flex items-center gap-2"><i data-lucide="trash-2" class="w-4 h-4"></i> Hapus</button>` : ''}
                                 </div>
                                 <div class="flex gap-2">
                                     <button type="button" onclick="closeMenuModal()" class="bg-gray-200 text-gray-800 font-semibold px-4 py-2 rounded-lg hover:bg-gray-300">Batal</button>
